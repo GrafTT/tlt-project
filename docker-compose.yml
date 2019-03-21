@@ -1,0 +1,41 @@
+version: '3'
+services:
+  database:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./databases:/var/lib/mysql
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      -8080:8080
+  backend:
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
+    environment:
+      - APP_ENV=dev
+    depends_on:
+      - database
+    ports:
+      - "40001:40001"
+    volumes:
+      - .:/usr/src/myapp
+  frontend:
+    build:
+      context: .
+      dockerfile: ./docker/frontend/Dockerfile
+    
+    environment:
+      - APP_ENV=dev
+      - APP_BACKEND_URL=backend:40001
+      - APP_FRONTEND_PORT=40002
+    depends_on:
+      - backend
+    ports:
+      - "40002:40002"
+    volumes:
+      - ./frontend:/app/src
