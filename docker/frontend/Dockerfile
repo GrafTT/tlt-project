@@ -2,10 +2,10 @@ FROM node:carbon
 
 WORKDIR /app
 COPY frontend/package*.json ./
-# RUN npm install
+RUN npm install
 # ENV PATH /app/node_modules/.bin:$PATH
 
-# ADD frontend /app/src
-# WORKDIR /app/src
+ADD frontend /app/src
+WORKDIR /app/src
 # RUN npm run build
-# CMD npm run start
+CMD npm run start
